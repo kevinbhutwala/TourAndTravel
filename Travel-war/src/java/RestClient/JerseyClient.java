@@ -10,7 +10,7 @@ import javax.ws.rs.client.Client;
 import javax.ws.rs.client.WebTarget;
 
 /**
- * Jersey REST client generated for REST resource:RestResource [generic]<br>
+ * Jersey REST client generated for REST resource:RestResource [Travel]<br>
  * USAGE:
  * <pre>
  *        JerseyClient client = new JerseyClient();
@@ -29,15 +29,30 @@ public class JerseyClient {
 
     public JerseyClient() {
         client = javax.ws.rs.client.ClientBuilder.newClient();
-        webTarget = client.target(BASE_URI).path("generic");
+        webTarget = client.target(BASE_URI).path("Travel");
     }
 
-    public void putJson(Object requestEntity) throws ClientErrorException {
-        webTarget.request(javax.ws.rs.core.MediaType.APPLICATION_JSON).put(javax.ws.rs.client.Entity.entity(requestEntity, javax.ws.rs.core.MediaType.APPLICATION_JSON));
-    }
-
-    public <T> T getAllHotelRatings(Class<T> responseType) throws ClientErrorException {
+    public <T> T gethotel_XML(Class<T> responseType) throws ClientErrorException {
         WebTarget resource = webTarget;
+        resource = resource.path("getHotels");
+        return resource.request(javax.ws.rs.core.MediaType.APPLICATION_XML).get(responseType);
+    }
+
+    public <T> T gethotel_JSON(Class<T> responseType) throws ClientErrorException {
+        WebTarget resource = webTarget;
+        resource = resource.path("getHotels");
+        return resource.request(javax.ws.rs.core.MediaType.APPLICATION_JSON).get(responseType);
+    }
+
+    public <T> T getcountry_XML(Class<T> responseType) throws ClientErrorException {
+        WebTarget resource = webTarget;
+        resource = resource.path("getcountry");
+        return resource.request(javax.ws.rs.core.MediaType.APPLICATION_XML).get(responseType);
+    }
+
+    public <T> T getcountry_JSON(Class<T> responseType) throws ClientErrorException {
+        WebTarget resource = webTarget;
+        resource = resource.path("getcountry");
         return resource.request(javax.ws.rs.core.MediaType.APPLICATION_JSON).get(responseType);
     }
 

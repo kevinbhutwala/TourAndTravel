@@ -6,15 +6,12 @@
 package Rest;
 
 import Beans.UserSessionBeanLocal;
+import Entities.Country;
 import Entities.Hotel;
-import Entities.Hotelrating;
-import Entities.Message;
 import java.util.Collection;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.ejb.EJB;
-import javax.naming.InitialContext;
-import javax.naming.NamingException;
+import javax.ejb.Stateless;
+import javax.enterprise.context.RequestScoped;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.UriInfo;
 import javax.ws.rs.Produces;
@@ -27,50 +24,31 @@ import javax.ws.rs.core.MediaType;
 /**
  * REST Web Service
  *
- * @author Karan
+ * @author misha
  */
-@Path("generic")
+@Path("Travel")
+@Stateless
 public class RestResource {
-@EJB UserSessionBeanLocal b1;
+
+    @EJB UserSessionBeanLocal  ebl;
+    
     @Context
     private UriInfo context;
-
-    /**
-     * Creates a new instance of RestResource
-     */
-    public RestResource() {
-    }
-
-    /**
-     * Retrieves representation of an instance of Rest.RestResource
-     * @return an instance of java.lang.String
-     */
+    
     @GET
-    @Path("/travels")
-    @Produces(MediaType.APPLICATION_JSON)
-    public Collection<Hotelrating> getAllHotelRatings()
-    {
-        return b1.getAllHotelRatings();
-    }
-
-    /**
-     * PUT method for updating or creating an instance of RestResource
-     * @param content representation for the resource
-     */
-    @PUT
-    @Consumes(MediaType.APPLICATION_JSON)
-    public void putJson(String content) {
+    @Path("/getcountry")
+    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    public Collection<Country> getcountry(){
+        return ebl.getallcountry();
     }
     
-
-
-    private UserSessionBeanLocal lookupUserSessionBeanLocal() {
-        try {
-            javax.naming.Context c = new InitialContext();
-            return (UserSessionBeanLocal) c.lookup("java:comp/env/UserSessionBean");
-        } catch (NamingException ne) {
-            Logger.getLogger(getClass().getName()).log(Level.SEVERE, "exception caught", ne);
-            throw new RuntimeException(ne);
-        }
+    @GET
+    @Path("/getHotels")
+    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    public Collection<Hotel> gethotel(){
+        return ebl.getAllHotels();
     }
+    
+    
+    
 }

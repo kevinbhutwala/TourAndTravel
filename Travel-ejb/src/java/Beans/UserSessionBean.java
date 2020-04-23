@@ -7,6 +7,7 @@ package Beans;
 
 import Entities.Cancelbooking;
 import Entities.City;
+import Entities.Country;
 import Entities.Hotel;
 import Entities.Hotelbooking;
 import Entities.Hotelrating;
@@ -16,6 +17,8 @@ import Entities.Packagerating;
 import Entities.Payment;
 import Entities.Travelpackage;
 import Entities.User;
+import java.time.ZonedDateTime;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.LinkedHashMap;
@@ -23,6 +26,7 @@ import java.util.Map;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 
 /**
  *
@@ -68,6 +72,12 @@ public class UserSessionBean implements UserSessionBeanLocal {
         objUser.setHotelratingCollection(objHotelRating);
         em.persist(objAddHotelRating);
         em.merge(objUser);   
+    }
+    
+    @Override
+    public Collection<Message> GetAllMessage()
+    {
+        return em.createNamedQuery("Message.findAll").getResultList();
     }
     
     @Override
@@ -264,5 +274,51 @@ public class UserSessionBean implements UserSessionBeanLocal {
         em.merge(objHotel);
     }
 
+    @Override
+    public Collection<Object[]> TopHotels() {
+   try{
+        Query query = em.createNativeQuery("SELECT  h.hotelID,h.hotelName,h.description,r.roomtypeId,r.roomtypeName,c.cityId,c.cityName,s.stateId,s.stateName FROM Hotel h\n" +
+"                                           INNER JOIN Roomtype rt ON h.roomtypeId = r.roomtypeId\n" +
+"                                           INNER JOIN City c ON h.cityId = c.cityId\n" +
+"                                           INNER JOIN State s ON h.stateId = s.stateId\n" +
+"                                           WHERE h.createdDate >= ?createdDateFrom AND h.createdDate <= ?createdDateTo","MultipleSearchOfHotels");
+        
+        Date createdDateTo = new Date();
+        Date createdDateFrom = Date.from(ZonedDateTime.now().minusMonths(1).toInstant());
+        
+        query.setParameter("createdDateFrom", createdDateFrom);
+        query.setParameter("createdDateTo", createdDateTo);
+        
+        Collection<Object[]> obj = query.getResultList();
+        return obj;
+        }
    
+        catch(Exception e)
+        {
+            e.printStackTrace();
+        }
+        return null;
+    }
+    
+    @Override
+    public Hotel GetHotelByID(int HotelID)
+    {
+        Hotel objHotelByID = (Hotel)em.find(Hotel.class, HotelID);
+        return objHotelByID;
+    }    
+
+    @Override
+    public Collection<Hotel> ShowHotel() {
+        return em.createNamedQuery("Hotel.findAll").getResultList();
+    }
+
+    @Override
+    public Collection<Hotel> getAllHotels() {
+        return em.createNamedQuery("Hotel.findAll").getResultList();
+    }
+
+    @Override
+    public Collection<Country> getallcountry() {
+        return em.createNamedQuery("Country.findAll").getResultList();
+    }
 }

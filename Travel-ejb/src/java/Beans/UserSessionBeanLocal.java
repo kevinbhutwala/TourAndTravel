@@ -5,7 +5,10 @@
  */
 package Beans;
 
+import Entities.Country;
+import Entities.Hotel;
 import Entities.Hotelrating;
+import Entities.Message;
 import Entities.Packagerating;
 import Entities.User;
 import java.util.Collection;
@@ -20,9 +23,8 @@ import javax.ejb.Local;
 @Local
 public interface UserSessionBeanLocal {
    public void AddMessage(int FromUserID,int ToUserID,String Message_Text);
-    
-    
-    public void AddHotelRatings(int UserID,int HotelID,int RatingStar,String Description);
+       
+           public void AddHotelRatings(int UserID,int HotelID,int RatingStar,String Description);
     public Collection<Hotelrating> getAllHotelRatings();
     
     //public void AddHotelBooking(Date BookingDate,Date CheckinDate,Date CheckoutDate,int CategoryID,int NoOfPerson,int NoOfRooms,int UserID);
@@ -45,4 +47,16 @@ public interface UserSessionBeanLocal {
     public void AddHotelBooking(int HotelID,int UserID,int PaymentID,Date CheckInDate,Date CheckOutDate,int NoOfPerson,int NoOfRooms,Date BookingDate);
     
     public Map<String,Integer> GetAllCity(); 
+
+    public Collection<Message> GetAllMessage();
+    
+        public Collection<Object[]> TopHotels();
+        
+    public Hotel GetHotelByID(int HotelID);
+    
+    public Collection<Hotel> ShowHotel();
+
+     public Collection<Hotel> getAllHotels();
+     
+      public Collection<Country> getallcountry();
 }
